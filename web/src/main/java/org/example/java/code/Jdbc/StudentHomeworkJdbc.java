@@ -3,9 +3,9 @@ package org.example.java.code.Jdbc;
 import org.example.java.code.Model.Homework;
 import org.example.java.code.Model.Student;
 import org.example.java.code.Model.StudentHomework;
+
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,27 +15,13 @@ public class StudentHomeworkJdbc {
     private static ApplicationContext context = new ClassPathXmlApplicationContext("app-context.xml");
     private static DatabasePool databasePool = context.getBean("databasePool",DatabasePool.class);
 
-    public static void main(String[] args) {
-        String a ="1";
-        List<StudentHomework> list = selectAll(a);
-        for (StudentHomework sthw : list){
-            System.out.println(sthw.gethwId());
-        }
-        Homework hw = showHomeworkDetails(a);
-        System.out.println(hw.gethwTitle());
-
-        String b = "123456";
-        deleteStudent(b);
-    }
-
     private static String driverName = "com.mysql.cj.jdbc.Driver";
-
 
     /**
      * 从student_homework表读取指定作业id 的所有记录，即某次作业的所有提交记录
      * @return 返回结果list
      */
-    public static List<StudentHomework> selectAll(String hw_id) {
+    public  List<StudentHomework> selectAll(String hw_id) {
 
         try {
             Class.forName(driverName);
@@ -52,15 +38,15 @@ public class StudentHomeworkJdbc {
                 try (ResultSet resultSet = statement.executeQuery(sqlString)) {
                     //获取执行结果
                     while (resultSet.next()) {
-                        StudentHomework sh = new StudentHomework();
-                        sh.setsthwId(resultSet.getLong("st_hw_id"));
-                        sh.setstId(resultSet.getLong("st_id"));
-                        sh.sethwId(resultSet.getLong("hw_id"));
-                        sh.sethwTitle(resultSet.getString("hw_title"));
-                        sh.sethwContent(resultSet.getString("hw_content"));
-                        sh.setsubmitContent(resultSet.getString("submit_content"));
-                        sh.setsthwCreateTime(resultSet.getTimestamp("st_hw_create_time"));
-                        list.add(sh);
+                        StudentHomework studentHomework = context.getBean("studentHomework",StudentHomework.class);
+                        studentHomework.setsthwId(resultSet.getLong("st_hw_id"));
+                        studentHomework.setstId(resultSet.getLong("st_id"));
+                        studentHomework.sethwId(resultSet.getLong("hw_id"));
+                        studentHomework.sethwTitle(resultSet.getString("hw_title"));
+                        studentHomework.sethwContent(resultSet.getString("hw_content"));
+                        studentHomework.setsubmitContent(resultSet.getString("submit_content"));
+                        studentHomework.setsthwCreateTime(resultSet.getTimestamp("st_hw_create_time"));
+                        list.add(studentHomework);
                     }
                 }
             }
@@ -76,7 +62,7 @@ public class StudentHomeworkJdbc {
      * @param homework  将要添加的homework
      * @return true=>成功否则失败
      */
-    public static boolean addHomework(Homework homework){
+    public boolean addHomework(Homework homework){
 
         try {
             Class.forName(driverName);
@@ -108,7 +94,7 @@ public class StudentHomeworkJdbc {
      * @param student 将要添加的student
      * @return true成功否则失败
      */
-    public static boolean addStudent(Student student){
+    public boolean addStudent(Student student){
 
         try {
             Class.forName(driverName);
@@ -138,7 +124,7 @@ public class StudentHomeworkJdbc {
      *从homework表读取所有作业记录
      * @return  结果list
      */
-    public static List<Homework> showHomework(){
+    public List<Homework> showHomework(){
 
         try {
             Class.forName(driverName);
@@ -154,7 +140,7 @@ public class StudentHomeworkJdbc {
                 try (ResultSet resultSet = statement.executeQuery(sqlString)) {
                     //获取执行结果
                     while (resultSet.next()) {
-                        Homework homework = new Homework();
+                        Homework homework = context.getBean("homework",Homework.class);
                         homework.sethwId(resultSet.getLong("hw_id"));
                         homework.sethwTitle(resultSet.getString("hw_title"));
                         homework.sethwContent(resultSet.getString("hw_content"));
@@ -174,7 +160,7 @@ public class StudentHomeworkJdbc {
      *从homework表读取所有作业记录
      * @return  结果list
      */
-    public static List<Homework> manageHomework(){
+    public List<Homework> manageHomework(){
 
         try {
             Class.forName(driverName);
@@ -190,7 +176,7 @@ public class StudentHomeworkJdbc {
                 try (ResultSet resultSet = statement.executeQuery(sqlString)) {
                     //获取执行结果
                     while (resultSet.next()) {
-                        Homework homework = new Homework();
+                        Homework homework = context.getBean("homework",Homework.class);
                         homework.sethwId(resultSet.getLong("hw_id"));
                         homework.sethwTitle(resultSet.getString("hw_title"));
                         homework.sethwCreateTime(resultSet.getDate("hw_create_time"));
@@ -210,7 +196,7 @@ public class StudentHomeworkJdbc {
      *从student表读取所有作业记录
      * @return  结果list
      */
-    public static List<Student> showStudent(){
+    public List<Student> showStudent(){
 
         try {
             Class.forName(driverName);
@@ -226,7 +212,7 @@ public class StudentHomeworkJdbc {
                 try (ResultSet resultSet = statement.executeQuery(sqlString)) {
                     //获取执行结果
                     while (resultSet.next()) {
-                        Student student = new Student();
+                        Student student = context.getBean("student",Student.class);
                         student.setstId(resultSet.getLong("st_id"));
                         student.setstName(resultSet.getString("st_name"));
                         student.setstCreateTime(resultSet.getDate("st_create_time"));
@@ -247,7 +233,7 @@ public class StudentHomeworkJdbc {
      * @param st_id 学生id
      * @return true成功否则失败
      */
-    public static boolean deleteStudent(String st_id){
+    public boolean deleteStudent(String st_id){
 
         try {
             Class.forName(driverName);
@@ -273,7 +259,7 @@ public class StudentHomeworkJdbc {
      * @param hw_id 作业id
      * @return true成功否则失败
      */
-    public static boolean deleteHomework(String hw_id){
+    public boolean deleteHomework(String hw_id){
 
         try {
             Class.forName(driverName);
@@ -299,7 +285,7 @@ public class StudentHomeworkJdbc {
      * @param hw_id 作业id
      * @return 作业对象homework
      */
-    public static Homework showHomeworkDetails(String hw_id){
+    public Homework showHomeworkDetails(String hw_id){
 
         try {
             Class.forName(driverName);
@@ -309,7 +295,7 @@ public class StudentHomeworkJdbc {
 
         String sqlString = "SELECT * FROM homework WHERE hw_id=" + hw_id;
 
-        Homework homework = new Homework();
+        Homework homework = context.getBean("homework",Homework.class);
         try (Connection connection = databasePool.getHikariDataSource().getConnection()) {
             try (Statement statement = connection.createStatement()) {
                 try (ResultSet resultSet = statement.executeQuery(sqlString)) {
@@ -333,7 +319,7 @@ public class StudentHomeworkJdbc {
      * @param studentHomework 作业
      * @return true成功否则失败
      */
-    public static boolean addStudentHomework(StudentHomework studentHomework){
+    public boolean addStudentHomework(StudentHomework studentHomework){
 
         try {
             Class.forName(driverName);

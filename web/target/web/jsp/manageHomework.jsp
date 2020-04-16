@@ -21,7 +21,7 @@
     </script>
 </head>
 <body>
-<h2 style="text-align: center; color: #2418DA; font-family: '仿宋';">管理学生</h2>
+<h2 style="text-align: center; color: #2418DA; font-family: '仿宋';">管理作业</h2>
 <form id="sub" method="post" action="/deleteHomework">
     <input id="hwId" name="hw_id" type="hidden">
     <table align="center" width="960" border="1" style="line-height: 40px; font-family: '华文楷体';">

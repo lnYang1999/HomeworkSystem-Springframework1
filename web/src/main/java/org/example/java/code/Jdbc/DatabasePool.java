@@ -7,7 +7,7 @@ public class DatabasePool {
 
     private static HikariDataSource hikariDataSource;
 
-    public static HikariDataSource getHikariDataSource(){
+    public HikariDataSource getHikariDataSource(){
 
         if(null != hikariDataSource){
             return hikariDataSource;
@@ -31,10 +31,5 @@ public class DatabasePool {
         return null;
     }
 
-    public static void main(String[] args) {
-        while (true){
-            getHikariDataSource();
-        }
-    }
 
 }
