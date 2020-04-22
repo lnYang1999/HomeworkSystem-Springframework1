@@ -73,19 +73,46 @@ public class StudentHomeworkJdbc {
         String sqlString = "insert into homework (hw_id,hw_title,hw_content,hw_create_time) values(?,?,?,?)";
 
         int resultSet = 0;
-        try (Connection connection = databasePool.getHikariDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sqlString)) {
-                ps.setLong(1,homework.gethwId());
-                ps.setString(2,homework.gethwTitle());
-                ps.setString(3,homework.gethwContent());
-                ps.setTimestamp(4,new Timestamp(homework.gethwCreateTime().getTime()));
-                resultSet = ps.executeUpdate();
-
+		
+		PreparedStatement ps = null;
+        Connection connection = null;
+        try {
+            connection = databasePool.getHikariDataSource().getConnection();
+            connection.setAutoCommit(false);  //相当于 set autocommit=0;
+			ps = connection.prepareStatement(sqlString);
+            //获取执行结果
+            ps.setLong(1,homework.gethwId());
+            ps.setString(2,homework.gethwTitle());
+            ps.setString(3,homework.gethwContent());
+            ps.setTimestamp(4,new Timestamp(homework.gethwCreateTime().getTime()));
+            resultSet = ps.executeUpdate();
+			connection.commit();  //executeUpdate()语句若不出错，提交事务。
+        } catch (Exception e) {
+            try {
+                //如果在创建连接对象过程中爆发异常，connection就会为null。若不加if语句，就会出现空指针异常。
+                if(connection!=null) {
+                    connection.rollback(); //executeUpdate()语句若出错，回滚，SQL语句执行不成功。
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
-        } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (ps!=null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connection!=null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return resultSet > 0;
     }
 
@@ -105,18 +132,45 @@ public class StudentHomeworkJdbc {
         String sqlString = "insert into student (st_id,st_name,st_create_time) values(?,?,?)";
 
         int resultSet = 0;
-        try (Connection connection = databasePool.getHikariDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sqlString)) {
-                ps.setLong(1,student.getstId());
-                ps.setString(2,student.getstName());
-                ps.setTimestamp(3,new Timestamp(student.getstCreateTime().getTime()));
-                resultSet = ps.executeUpdate();
-
+		
+		PreparedStatement ps = null;
+        Connection connection = null;
+        try {
+            connection = databasePool.getHikariDataSource().getConnection();
+            connection.setAutoCommit(false);  //相当于 set autocommit=0;
+			ps = connection.prepareStatement(sqlString);
+            //获取执行结果
+            ps.setLong(1,student.getstId());
+            ps.setString(2,student.getstName());
+            ps.setTimestamp(3,new Timestamp(student.getstCreateTime().getTime()));
+            resultSet = ps.executeUpdate();
+			connection.commit();  //executeUpdate()语句若不出错，提交事务。
+        } catch (Exception e) {
+            try {
+                //如果在创建连接对象过程中爆发异常，connection就会为null。若不加if语句，就会出现空指针异常。
+                if(connection!=null) {
+                    connection.rollback(); //executeUpdate()语句若出错，回滚，SQL语句执行不成功。
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
-        } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (ps!=null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connection!=null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return resultSet > 0;
     }
 
@@ -331,21 +385,48 @@ public class StudentHomeworkJdbc {
                 "hw_title,hw_content,submit_content,st_hw_create_time) values(?,?,?,?,?,?)";
 
         int resultSet = 0;
-        try (Connection connection = databasePool.getHikariDataSource().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(sqlString)) {
-                ps.setLong(1,studentHomework.getstId());
-                ps.setLong(2,studentHomework.gethwId());
-                ps.setString(3,studentHomework.gethwTitle());
-                ps.setString(4,studentHomework.gethwContent());
-                ps.setString(5,studentHomework.getsubmitContent());
-                ps.setTimestamp(6,new Timestamp(studentHomework.getsthwCreateTime().getTime()));
-                resultSet = ps.executeUpdate();
-
+		
+		PreparedStatement ps = null;
+        Connection connection = null;
+        try {
+            connection = databasePool.getHikariDataSource().getConnection();
+            connection.setAutoCommit(false);  //相当于 set autocommit=0;
+			ps = connection.prepareStatement(sqlString);
+            //获取执行结果
+            ps.setLong(1,studentHomework.getstId());
+            ps.setLong(2,studentHomework.gethwId());
+            ps.setString(3,studentHomework.gethwTitle());
+            ps.setString(4,studentHomework.gethwContent());
+            ps.setString(5,studentHomework.getsubmitContent());
+            ps.setTimestamp(6,new Timestamp(studentHomework.getsthwCreateTime().getTime()));
+            resultSet = ps.executeUpdate();
+			connection.commit();  //executeUpdate()语句若不出错，提交事务。
+        } catch (Exception e) {
+            try {
+                //如果在创建连接对象过程中爆发异常，connection就会为null。若不加if语句，就会出现空指针异常。
+                if(connection!=null) {
+                    connection.rollback(); //executeUpdate()语句若出错，回滚，SQL语句执行不成功。
+                }
+            } catch (SQLException e1) {
+                e1.printStackTrace();
             }
-        } catch (SQLException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                if (ps!=null) {
+                    ps.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (connection!=null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-
         return resultSet > 0;
     }
 
